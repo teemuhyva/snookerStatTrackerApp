@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SnookerApp.PlaySetGame2">
+
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="Choose Players" HorizontalOptions="Center"/>
+            </StackLayout>
+            <StackLayout Padding="5" Orientation="Horizontal">
+                <StackLayout Spacing="0" Orientation="Horizontal" HorizontalOptions="Start" >
+                    <Label Text="Player 1" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+                </StackLayout>
+                <StackLayout Spacing="0"  Orientation="Horizontal" HorizontalOptions="EndAndExpand" >
+                    <Label Text="Player 2" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Padding="5" Orientation="Horizontal">
+                <StackLayout Spacing="0" Orientation="Horizontal" HorizontalOptions="Start" >
+                    <Label Text="{Binding Player1}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+                </StackLayout>
+                <StackLayout Spacing="0"  Orientation="Horizontal" HorizontalOptions="EndAndExpand" >
+                    <Label Text="{Binding Player2}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+                <ListView x:Name="playerView"
+                          ItemSelected="OnItemSelected">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell Text="{Binding PlayerName}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                <Button Text="New Player" Command="{Binding GetNewPlayerCommand}"/>
+                <Button Text="Next" Clicked="SetHandiCapPage"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+    
+</ContentPage>
