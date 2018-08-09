@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SnookerApp"
+             x:Class="SnookerApp.MainPage">
+
+    <StackLayout HorizontalOptions="Center" Padding="0,80,0, 0">
+        <Button Text="Play" Clicked="Play"  WidthRequest="50"></Button>
+        <Button Text="Game Settings"  WidthRequest="100"></Button>
+        <Button Text="My Account"  WidthRequest="100"></Button>
+        <Button Text="History"  WidthRequest="100"></Button>
+        <Button Text="Friends"  WidthRequest="100"></Button>
+        <Button Text="Instuctions"  WidthRequest="150"></Button>
+    </StackLayout>
+
+</ContentPage>
