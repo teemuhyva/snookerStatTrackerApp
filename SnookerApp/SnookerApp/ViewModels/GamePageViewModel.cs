@@ -11,32 +11,39 @@ namespace SnookerApp.ViewModels
 {
     public class GamePageViewModel : INotifyPropertyChanged
     {
-        int player1Score;
-        int player2Score;
-        int player1Break;
-        int player2Break;
+        private int player1Score;
+        private int player2Score;
+        private int player1Break;
+        private int player2Break;
 
-        int totalPointsInGame = 147;
-        int currentPointsGained;
-        int currentAmountRedPotted;
+        private int totalPointsInGame = 147;
+        private int currentPointsGained;
+        private int currentAmountRedPotted;
 
-        string gameTextArea;
-        string gameScoreArea;
+        private string gameTextArea;
+        private string gameScoreArea;
 
-        string playerStatsDisplayText;
+        private string playerStatsDisplayText;
 
-        double average;
-        int potsSuccessPlayer1;
-        int totalTriesPlayer1;
-        int potsSuccessPlayer2;
-        int totalTriesPlayer2;
+        private double average;
+        private int potsSuccessPlayer1;
+        private int totalTriesPlayer1;
+        private int potsSuccessPlayer2;
+        private int totalTriesPlayer2;
+        private int longSuccess;
+        private int longTotal;
+        private int restSuccess;
+        private int restTotal;
+        private Boolean isPlayer1Turn;
+        private Boolean isRest;
+        private Boolean isLong;
 
-        Boolean yellow = false;
-        Boolean green = false;
-        Boolean blue = false;
-        Boolean brown = false;
-        Boolean pink = false;
-        Boolean black = false;
+        private Boolean yellow = false;
+        private Boolean green = false;
+        private Boolean blue = false;
+        private Boolean brown = false;
+        private Boolean pink = false;
+        private Boolean black = false;
 
         private INavigation _navigation;
 
@@ -582,7 +589,7 @@ namespace SnookerApp.ViewModels
         }
         private void CheckStats(object sender)
         {
-            _navigation.PushAsync(new StatisticPage(potsSuccessPlayer1, totalTriesPlayer1));
+            _navigation.PushAsync(new StatisticPage(potsSuccessPlayer1, totalTriesPlayer1, potsSuccessPlayer2, totalTriesPlayer2, isLong, isRest, isPlayer1Turn));
         }
     }
 }
