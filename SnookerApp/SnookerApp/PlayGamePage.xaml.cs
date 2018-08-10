@@ -14,17 +14,11 @@ namespace SnookerApp
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class PlayGamePage : ContentPage
 	{
-        GameStatistics gameStatistics;
 		public PlayGamePage ()
 		{
 			InitializeComponent ();
-            BindingContext = new GamePageViewModel();
+            BindingContext = new GamePageViewModel(Navigation);
         }
         
-        async void GoToStats(object sender, EventArgs e)  {
-            InitializeComponent();
-            
-            await Navigation.PushAsync(new StatisticPage(gameStatistics));
-        }
     }
 }

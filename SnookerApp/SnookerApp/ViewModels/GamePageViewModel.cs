@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace SnookerApp.ViewModels
 {
     public class GamePageViewModel : INotifyPropertyChanged
     {
-
         int player1Score;
         int player2Score;
         int player1Break;
@@ -38,13 +38,16 @@ namespace SnookerApp.ViewModels
         Boolean pink = false;
         Boolean black = false;
 
+        private INavigation _navigation;
+
         //if red is false player can pot colored ball
         Boolean red = true;
 
         Boolean player1Turn = true;
         
-        public GamePageViewModel()
+        public GamePageViewModel(INavigation navigation)
         {
+            _navigation = navigation;
             AddOnePoint = new Command(OnePoint);
             AddTwoPoint = new Command(TwoPoint);
             AddThreePoint = new Command(ThreePoint);
@@ -53,6 +56,7 @@ namespace SnookerApp.ViewModels
             AddSixPoint = new Command(SixPoint);
             AddSevenPoint = new Command(SevenPoint);
             MissedPot = new Command(PotMissed);
+            GoToStats = new Command<object>(CheckStats);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -60,6 +64,8 @@ namespace SnookerApp.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        public Command<object> GoToStats { get; set; }       
 
         //update scores
         public int Player1Score {
@@ -167,7 +173,6 @@ namespace SnookerApp.ViewModels
                     currentAmountRedPotted += 1;
                     potsSuccessPlayer1++;
                     totalTriesPlayer1++;
-                    new GameStatistics(potsSuccessPlayer1, totalTriesPlayer1);
                     GameTextArea = "Player 1 scored 1 point\n";
                     Player1Score = 1;
                     Player1Break = 1;                    
@@ -573,8 +578,11 @@ namespace SnookerApp.ViewModels
                 Player2Break = 0;
                 totalTriesPlayer2++;
                 GameTextArea = "Player 2 missed\n";
-            }
-            
+            }            
+        }
+        private void CheckStats(object sender)
+        {
+            _navigation.PushAsync(new StatisticPage(potsSuccessPlayer1, totalTriesPlayer1));
         }
     }
 }

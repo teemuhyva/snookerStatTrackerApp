@@ -6,7 +6,7 @@
         <StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Button Text="Menu" HorizontalOptions="Start"  WidthRequest="120"/>
-                <Button Clicked="GoToStats" Text="Stats" HorizontalOptions="Center"  WidthRequest="120"/>
+                <Button Command="{Binding GoToStats}" CommandParameter="{Binding}" Text="Stats" HorizontalOptions="Center"  WidthRequest="120"/>
                 <Button Text="Undo" HorizontalOptions="End" WidthRequest="120"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal">
