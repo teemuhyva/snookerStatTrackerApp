@@ -36,9 +36,9 @@
                 </ContentView>
             </StackLayout>
             <StackLayout Orientation="Horizontal">
-                <Button Text="Rest" HorizontalOptions="Start" WidthRequest="120"/>
+                <Button Command="{Binding Rest}" Text="Rest" HorizontalOptions="Start" WidthRequest="120"/>
                 <Button Text="Snookered" HorizontalOptions="Center" WidthRequest="120"/>
-                <Button Text="Long" HorizontalOptions="End" WidthRequest="120"/>
+                <Button Command="{Binding Long}" Text="Long" HorizontalOptions="End" WidthRequest="120"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Button Command="{Binding AddOnePoint}"  BackgroundColor="Red" WidthRequest="70" HeightRequest="70" HorizontalOptions="Start"/>

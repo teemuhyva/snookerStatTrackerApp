@@ -11,29 +11,16 @@ namespace SnookerApp.ViewModels
 {
     public class GamePageViewModel : INotifyPropertyChanged
     {
-        private int player1Score;
-        private int player2Score;
-        private int player1Break;
-        private int player2Break;
+        private int player1Score, player2Score, player1Break, player2Break;
 
         private int totalPointsInGame = 147;
-        private int currentPointsGained;
-        private int currentAmountRedPotted;
-
-        private string gameTextArea;
-        private string gameScoreArea;
-
+        private int currentPointsGained, currentAmountRedPotted;
+        private string gameTextArea, gameScoreArea;
         private string playerStatsDisplayText;
 
         private double average;
-        private int potsSuccessPlayer1;
-        private int totalTriesPlayer1;
-        private int potsSuccessPlayer2;
-        private int totalTriesPlayer2;
-        private int longSuccess;
-        private int longTotal;
-        private int restSuccess;
-        private int restTotal;
+        private int potsSuccessPlayer1, totalTriesPlayer1, longSuccess1, longTotal1, restSuccess1, restTotal1;
+        private int potsSuccessPlayer2, totalTriesPlayer2, longSuccess2, longTotal2, restSuccess2, restTotal2;
         private Boolean isPlayer1Turn;
         private Boolean isRest;
         private Boolean isLong;
@@ -64,6 +51,8 @@ namespace SnookerApp.ViewModels
             AddSevenPoint = new Command(SevenPoint);
             MissedPot = new Command(PotMissed);
             GoToStats = new Command<object>(CheckStats);
+            Rest = new Command(RestEnabled);
+            Long = new Command(LongEnabled);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -166,7 +155,8 @@ namespace SnookerApp.ViewModels
         public Command AddSixPoint { get; }
         public Command AddSevenPoint { get; }
         public Command MissedPot { get; }
-
+        public Command Long { get; }
+        public Command Rest { get; }
 
         //these following 7 methods for points needs to be refactored. Does same things over and over again
         //logic is ok for now.
@@ -183,7 +173,21 @@ namespace SnookerApp.ViewModels
                     GameTextArea = "Player 1 scored 1 point\n";
                     Player1Score = 1;
                     Player1Break = 1;                    
-                    red = false;                    
+                    red = false;
+                    
+                    if(isLong)
+                    {
+                        longSuccess1++;
+                        longTotal1++;
+                        isLong = false;
+                    }
+
+                    if(isRest)
+                    {
+                        restSuccess1++;
+                        restTotal1++;
+                        isRest = false;
+                    }
                 }
                 else
                 {
@@ -195,6 +199,20 @@ namespace SnookerApp.ViewModels
                     Player2Score = 1;
                     Player2Break = 1;                    
                     red = false;
+
+                    if (isLong)
+                    {
+                        longSuccess2++;
+                        longTotal2++;
+                        isLong = false;
+                    }
+
+                    if (isRest)
+                    {
+                        restSuccess2++;
+                        restTotal2++;
+                        isRest = false;
+                    }
                 }
             }
             else
@@ -227,6 +245,20 @@ namespace SnookerApp.ViewModels
                         Player1Break = 2;                        
                         GameTextArea = "Player 1 scored 2 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess1++;
+                            longTotal1++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess1++;
+                            restTotal1++;
+                            isRest = false;
+                        }
                     }
                     else
                     {
@@ -237,6 +269,20 @@ namespace SnookerApp.ViewModels
                         Player2Break = 2;                        
                         GameTextArea = "Player 2 scored 2 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess2++;
+                            longTotal2++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess2++;
+                            restTotal2++;
+                            isRest = false;
+                        }
                     }
                 }
                
@@ -250,12 +296,40 @@ namespace SnookerApp.ViewModels
                             Player1Break = 2;
                             currentPointsGained += 2;
                             yellow = true;
+
+                            if (isLong)
+                            {
+                                longSuccess1++;
+                                longTotal1++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess1++;
+                                restTotal1++;
+                                isRest = false;
+                            }
                         } else
                         {
                             Player2Score = 2;
                             Player2Break = 2;
                             currentPointsGained += 2;
                             yellow = true;
+
+                            if (isLong)
+                            {
+                                longSuccess2++;
+                                longTotal2++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess2++;
+                                restTotal2++;
+                                isRest = false;
+                            }
                         }
                        
                     }
@@ -283,6 +357,20 @@ namespace SnookerApp.ViewModels
                         Player1Break = 3;                        
                         GameTextArea = "Player 1 scored 3 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess1++;
+                            longTotal1++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess1++;
+                            restTotal1++;
+                            isRest = false;
+                        }
                     }
                     else
                     {
@@ -293,6 +381,20 @@ namespace SnookerApp.ViewModels
                         Player2Break = 3;                        
                         GameTextArea = "Player 2 scored 3 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess2++;
+                            longTotal2++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess2++;
+                            restTotal2++;
+                            isRest = false;
+                        }
                     }
                 }
                 
@@ -309,12 +411,40 @@ namespace SnookerApp.ViewModels
                             Player1Break = 3;
                             currentPointsGained += 3;
                             green = true;
+
+                            if (isLong)
+                            {
+                                longSuccess1++;
+                                longTotal1++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess1++;
+                                restTotal1++;
+                                isRest = false;
+                            }
                         } else
                         {
                             Player2Score = 3;
                             Player2Break = 3;
                             currentPointsGained += 3;
                             green = true;
+
+                            if (isLong)
+                            {
+                                longSuccess2++;
+                                longTotal2++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess2++;
+                                restTotal2++;
+                                isRest = false;
+                            }
                         }
                       
                     }
@@ -343,6 +473,19 @@ namespace SnookerApp.ViewModels
                         GameTextArea = "Player 1 scored 4 points\n";
                         
                         red = true;
+                        if (isLong)
+                        {
+                            longSuccess1++;
+                            longTotal1++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess1++;
+                            restTotal1++;
+                            isRest = false;
+                        }
                     }
                     else
                     {
@@ -351,9 +494,22 @@ namespace SnookerApp.ViewModels
                         currentPointsGained += 4;
                         Player2Score = 4;
                         Player2Break = 4;                        
-                        GameTextArea = "Player 2 scored 4 points\n";
-                        
+                        GameTextArea = "Player 2 scored 4 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess2++;
+                            longTotal2++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess2++;
+                            restTotal2++;
+                            isRest = false;
+                        }
                     }
                 }
                
@@ -370,12 +526,40 @@ namespace SnookerApp.ViewModels
                             Player1Break = 4;
                             currentPointsGained += 4;
                             blue = true;
+
+                            if (isLong)
+                            {
+                                longSuccess1++;
+                                longTotal1++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess1++;
+                                restTotal1++;
+                                isRest = false;
+                            }
                         } else
                         {
                             Player2Score = 4;
                             Player2Break = 4;
                             currentPointsGained += 4;
                             blue = true;
+
+                            if (isLong)
+                            {
+                                longSuccess2++;
+                                longTotal2++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess2++;
+                                restTotal2++;
+                                isRest = false;
+                            }
                         }
                         
                     }
@@ -401,9 +585,22 @@ namespace SnookerApp.ViewModels
                         currentPointsGained += 5;
                         Player1Score = 5;
                         Player1Break = 5;                        
-                        GameTextArea = "Player 1 scored 5 points\n";
-                        
+                        GameTextArea = "Player 1 scored 5 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess1++;
+                            longTotal1++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess1++;
+                            restTotal1++;
+                            isRest = false;
+                        }
                     }
                     else
                     {
@@ -414,6 +611,20 @@ namespace SnookerApp.ViewModels
                         potsSuccessPlayer2++;
                         totalTriesPlayer2++;
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess2++;
+                            longTotal2++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess2++;
+                            restTotal2++;
+                            isRest = false;
+                        }
                     }
                 }
                
@@ -430,12 +641,40 @@ namespace SnookerApp.ViewModels
                             Player1Break = 5;
                             currentPointsGained += 5;
                             brown = true;
+
+                            if (isLong)
+                            {
+                                longSuccess1++;
+                                longTotal1++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess1++;
+                                restTotal1++;
+                                isRest = false;
+                            }
                         } else
                         {
                             Player2Score = 5;
                             Player2Break = 5;
                             currentPointsGained += 5;
                             brown = true;
+
+                            if (isLong)
+                            {
+                                longSuccess2++;
+                                longTotal2++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess2++;
+                                restTotal2++;
+                                isRest = false;
+                            }
                         }
                         
                     }
@@ -461,9 +700,22 @@ namespace SnookerApp.ViewModels
                         currentPointsGained += 6;
                         Player1Score = 6;
                         Player1Break = 6;                        
-                        GameTextArea = "Player 1 scored 6 points\n";
-                        
+                        GameTextArea = "Player 1 scored 6 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess1++;
+                            longTotal1++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess1++;
+                            restTotal1++;
+                            isRest = false;
+                        }
                     }
                     else
                     {
@@ -472,9 +724,22 @@ namespace SnookerApp.ViewModels
                         currentPointsGained += 6;
                         Player2Score = 6;
                         Player2Break = 6;                        
-                        GameTextArea = "Player 2 scored 6 points\n";
-                        
+                        GameTextArea = "Player 2 scored 6 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess2++;
+                            longTotal2++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess2++;
+                            restTotal2++;
+                            isRest = false;
+                        }
                     }
                 }
                 
@@ -491,12 +756,40 @@ namespace SnookerApp.ViewModels
                             Player1Break = 6;
                             currentPointsGained += 6;
                             pink = true;
+
+                            if (isLong)
+                            {
+                                longSuccess1++;
+                                longTotal1++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess1++;
+                                restTotal1++;
+                                isRest = false;
+                            }
                         } else
                         {
                             Player2Score = 6;
                             Player2Break = 6;
                             currentPointsGained += 6;
                             pink = true;
+
+                            if (isLong)
+                            {
+                                longSuccess2++;
+                                longTotal2++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess2++;
+                                restTotal2++;
+                                isRest = false;
+                            }
                         }
                         
                     }
@@ -522,9 +815,22 @@ namespace SnookerApp.ViewModels
                         currentPointsGained += 7;
                         Player1Score = 7;
                         Player1Break = 7;                       
-                        GameTextArea = "Player 1 scored 7 points\n";
-                        
+                        GameTextArea = "Player 1 scored 7 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess1++;
+                            longTotal1++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess1++;
+                            restTotal1++;
+                            isRest = false;
+                        }
                     }
                     else
                     {
@@ -533,9 +839,22 @@ namespace SnookerApp.ViewModels
                         currentPointsGained += 7;
                         Player2Score = 7;
                         Player2Break = 7;                        
-                        GameTextArea = "Player 2 scored 7 points\n";
-                        
+                        GameTextArea = "Player 2 scored 7 points\n";                        
                         red = true;
+
+                        if (isLong)
+                        {
+                            longSuccess2++;
+                            longTotal2++;
+                            isLong = false;
+                        }
+
+                        if (isRest)
+                        {
+                            restSuccess2++;
+                            restTotal2++;
+                            isRest = false;
+                        }
                     }
                 }
                
@@ -552,12 +871,40 @@ namespace SnookerApp.ViewModels
                             Player1Break = 7;
                             currentPointsGained += 7;
                             black = true;
+
+                            if (isLong)
+                            {
+                                longSuccess1++;
+                                longTotal1++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess1++;
+                                restTotal1++;
+                                isRest = false;
+                            }
                         } else
                         {
                             Player2Score = 7;
                             Player2Break = 7;
                             currentPointsGained += 7;
                             black = true;
+
+                            if (isLong)
+                            {
+                                longSuccess2++;
+                                longTotal2++;
+                                isLong = false;
+                            }
+
+                            if (isRest)
+                            {
+                                restSuccess2++;
+                                restTotal2++;
+                                isRest = false;
+                            }
                         }                       
                     }
                 }
@@ -577,6 +924,17 @@ namespace SnookerApp.ViewModels
                 player1Break = 0;
                 Player1Break = 0;
                 totalTriesPlayer1++;
+                if (isLong)
+                {
+                    longTotal1++;
+                    isLong = false;
+                }
+
+                if (isRest)
+                {
+                    restTotal1++;
+                    isRest = false;
+                }
                 GameTextArea = "Player 1 missed\n";
             } else
             {
@@ -584,12 +942,37 @@ namespace SnookerApp.ViewModels
                 player2Break = 0;
                 Player2Break = 0;
                 totalTriesPlayer2++;
+                if (isLong)
+                {
+                    longTotal2++;
+                    isLong = false;
+                }
+
+                if (isRest)
+                {
+                    restTotal2++;
+                    isRest = false;
+                }
                 GameTextArea = "Player 2 missed\n";
             }            
         }
+        void RestEnabled()
+        {
+            isRest = true;
+        }
+        void LongEnabled()
+        {
+            isLong = true;
+        }
         private void CheckStats(object sender)
         {
-            _navigation.PushAsync(new StatisticPage(potsSuccessPlayer1, totalTriesPlayer1, potsSuccessPlayer2, totalTriesPlayer2, isLong, isRest, isPlayer1Turn));
+            _navigation.PushAsync(new StatisticPage(potsSuccessPlayer1, totalTriesPlayer1,
+                potsSuccessPlayer2, totalTriesPlayer2,
+                longSuccess1, longTotal1,
+                longSuccess2, longTotal2,
+                restSuccess1, restTotal1,
+                restSuccess2, restTotal2,
+                player1Turn));
         }
     }
 }

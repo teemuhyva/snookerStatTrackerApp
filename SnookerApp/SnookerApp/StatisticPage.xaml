@@ -8,9 +8,9 @@
             <!-- Player 1 stats-->
             
             <Label Text="Player 1" AbsoluteLayout.LayoutBounds="30, 10, 100, 20" />
-            <Label Text="{Binding PotsPlayer1}" AbsoluteLayout.LayoutBounds="30, 50, 100, 20"/>
-            <Label Text="{Binding LongPlayer1}" AbsoluteLayout.LayoutBounds="30, 100, 100, 20"/>
-            <Label Text="{Binding RestPlayer1}" AbsoluteLayout.LayoutBounds="30, 150, 100, 20"/>
+            <Label x:Name="potsPlayer1" Text="{Binding PotsPlayer1, Mode=TwoWay}" AbsoluteLayout.LayoutBounds="30, 50, 100, 20"/>
+            <Label Text="{Binding LongPlayer1, Mode=TwoWay}" AbsoluteLayout.LayoutBounds="30, 100, 100, 20"/>
+            <Label Text="{Binding RestPlayer1, Mode=TwoWay}" AbsoluteLayout.LayoutBounds="30, 150, 100, 20"/>
             <Label Text="{Binding PsntPlayer1}" AbsoluteLayout.LayoutBounds="30, 200, 100, 20"/>
             <Label Text="{Binding SafetyPlayer1}" AbsoluteLayout.LayoutBounds="30, 250, 100, 20"/>
             <Label Text="{Binding ShotTimePlayer1}" AbsoluteLayout.LayoutBounds="30, 300, 100, 20"/>
@@ -31,9 +31,9 @@
             <!-- Player 2 stats-->
             
             <Label Text="Player 2" AbsoluteLayout.LayoutBounds="300, 10, 100, 20"  />
-            <Label Text="{Binding PotsPlayer2}" AbsoluteLayout.LayoutBounds="300, 50, 100, 20"/>
-            <Label Text="{Binding LongPlayer2}" AbsoluteLayout.LayoutBounds="300, 100, 100, 20"/>
-            <Label Text="{Binding RestPlayer2}" AbsoluteLayout.LayoutBounds="300, 150, 100, 20"/>
+            <Label Text="{Binding PotsPlayer2, Mode=TwoWay}" AbsoluteLayout.LayoutBounds="300, 50, 100, 20"/>
+            <Label Text="{Binding LongPlayer2, Mode=TwoWay}" AbsoluteLayout.LayoutBounds="300, 100, 100, 20"/>
+            <Label Text="{Binding RestPlayer2, Mode=TwoWay}" AbsoluteLayout.LayoutBounds="300, 150, 100, 20"/>
             <Label Text="{Binding PsntPlayer2}" AbsoluteLayout.LayoutBounds="300, 200, 100, 20"/>
             <Label Text="{Binding SafetyPlayer2}" AbsoluteLayout.LayoutBounds="300, 250, 100, 20"/>
             <Label Text="{Binding ShotTimePlayer2}" AbsoluteLayout.LayoutBounds="300, 300, 100, 20"/>
