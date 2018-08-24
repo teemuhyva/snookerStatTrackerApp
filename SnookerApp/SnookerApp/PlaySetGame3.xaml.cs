@@ -1,4 +1,5 @@
-﻿using SnookerApp.ViewModels;
+﻿using SnookerApp.Model;
+using SnookerApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,18 @@ namespace SnookerApp
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class PlaySetGame3 : ContentPage
 	{
-		public PlaySetGame3 ()
+        GameStatistics gameStatistics = new GameStatistics();
+
+        public PlaySetGame3 (Players players)
 		{
 			InitializeComponent ();
 
-            BindingContext = new LenghtPlayPickerViewModel();
+            BindingContext = new LenghtPlayPickerViewModel(players);
         }
 
         async void PlayGame(object sender, EventArgs e)
         {
-            var playGamePage = new PlayGamePage();
+            var playGamePage = new PlayGamePage(gameStatistics);
             NavigationPage.SetHasNavigationBar(playGamePage, false);
             await Navigation.PushAsync(playGamePage);
            

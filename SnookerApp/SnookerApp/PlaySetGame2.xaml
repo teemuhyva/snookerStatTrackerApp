@@ -18,16 +18,16 @@
             </StackLayout>
             <StackLayout Padding="5" Orientation="Horizontal">
                 <StackLayout Spacing="0" Orientation="Horizontal" HorizontalOptions="Start" >
-                    <Label Text="{Binding Player1}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+                    <Label x:Name="player1" Text="{Binding Player1}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
                 </StackLayout>
                 <StackLayout Spacing="0"  Orientation="Horizontal" HorizontalOptions="EndAndExpand" >
-                    <Label Text="{Binding Player2}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+                    <Label x:Name="player2" Text="{Binding Player2}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
                 </StackLayout>
             </StackLayout>
 
             <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
                 <ListView x:Name="playerView"
-                          ItemSelected="OnItemSelected">
+                          ItemSelected="ChooseItem">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextCell Text="{Binding PlayerName}" />

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Xamarin.Forms;
 
 namespace SnookerApp.ViewModels
 {
@@ -15,10 +16,8 @@ namespace SnookerApp.ViewModels
         private double averageLongPlayer2;
         private double averageRestPlayer1;
         private double averageRestPlayer2;
-        private int potsSuccessPlayer1, totalTriesPlayer1, longSuccessPlayer1, longTotalPlayer1, restSuccessPlayer1, restTotalPlayer1;
-        private int potsSuccessPlayer1temp, totalTriesPlayer1temp, longSuccessPlayer1temp, longTotalPlayer1temp, restSuccessPlayer1temp, restTotalPlayer1temp;
-        private int potsSuccessPlayer2, totalTriesPlayer2, longSuccessPlayer2, longTotalPlayer2, restSuccessPlayer2, restTotalPlayer2;
-        private int potsSuccessPlayer2temp, totalTriesPlayer2temp, longSucces2Player1temp, longTotalPlayer2temp, restSuccessPlayer2temp, restTotalPlayer2temp;
+        //private int potsSuccessPlayer1, totalTriesPlayer1, longSuccessPlayer1, longTotalPlayer1, restSuccessPlayer1, restTotalPlayer1;
+        //private int potsSuccessPlayer2, totalTriesPlayer2, longSuccessPlayer2, longTotalPlayer2, restSuccessPlayer2, restTotalPlayer2;
 
         private Boolean isLongEnabled;
         private Boolean isRestEnabled;
@@ -26,28 +25,14 @@ namespace SnookerApp.ViewModels
 
         private string calculateAverageFor;
 
-        GameStatistics gameStatistics;
+        private INavigation _navigation;
 
-        public GameStatisticViewModel(int successPlayer1, int totalPlayer1,
-                                        int successPlayer2, int totalPlayer2,
-                                        int longSuccess1, int longTotal1,
-                                        int longSuccess2, int longTotal2,
-                                        int restSuccess1, int restTotal1,
-                                        int restSuccess2, int restTotal2,
-                                         Boolean isPlayer1Turn) {
-            potsSuccessPlayer1 = successPlayer1;
-            totalTriesPlayer1 = totalPlayer1;
-            potsSuccessPlayer2 = successPlayer2;
-            totalTriesPlayer2 = totalPlayer2;
-            longSuccessPlayer1 = longSuccess1;
-            longTotalPlayer1 = longTotal1;
-            longSuccessPlayer2 = longSuccess2;
-            longTotalPlayer1 = longTotal2;
-            restSuccessPlayer1 = restSuccess1;
-            restTotalPlayer1 = restTotal1;
-            restSuccessPlayer2 = restSuccess2;
-            restTotalPlayer2 = restTotal2;
-            Player1Turn = isPlayer1Turn;
+        GameStatistics _gameStatistics;
+
+        public GameStatisticViewModel(GameStatistics gameStatistics, INavigation navigation) {
+            _navigation = navigation;
+            _gameStatistics = gameStatistics;
+            BackToGame = new Command<object>(GoBackToGame);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -56,120 +41,147 @@ namespace SnookerApp.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        
+        public Command<object> BackToGame { get; set; }
 
         //update statistic for player1
         public string PotsPlayer1 {
             get {
-                if(Player1Turn) {
-                    calculateAverageFor = "potsPlayer1";
-                    CalculateAverage(potsSuccessPlayer1temp, totalTriesPlayer1temp);
-                }
-                
-                return $"{averagePotsPlayer1}% ({potsSuccessPlayer1temp}/{totalTriesPlayer1temp})";
+                calculateAverageFor = "potsPlayer1";
+                CalculateAverage(_gameStatistics.potsSuccessPlayer1, _gameStatistics.totalTriesPlayer1);
+  
+                return $"{averagePotsPlayer1}% ({_gameStatistics.potsSuccessPlayer1}/{_gameStatistics.totalTriesPlayer1})";
             }
         }
-
         public string LongPlayer1 {
             get {
-                if(Player1Turn) {
-                    calculateAverageFor = "longPlayer1";
-                    CalculateAverage(longSuccessPlayer1, longTotalPlayer1);
-                }               
-               
-                return $"{averageLongPlayer1}% ({longSuccessPlayer1}/{longTotalPlayer1})";
+                calculateAverageFor = "longPlayer1";
+                CalculateAverage(_gameStatistics.longSuccess1, _gameStatistics.longTotal1);
+ 
+                return $"{averageLongPlayer1}% ({_gameStatistics.longSuccess1}/{_gameStatistics.longTotal1})";
             }
         }
-
         public string RestPlayer1 {
             get {
-                if(Player1Turn) {
-                    calculateAverageFor = "restPlayer1";
-                    CalculateAverage(restSuccessPlayer1, restTotalPlayer1);
-                }               
-                
-                return $"{averageRestPlayer1}% ({restSuccessPlayer1}/{restTotalPlayer1})";
+                calculateAverageFor = "restPlayer1";
+                CalculateAverage(_gameStatistics.restSuccess1, _gameStatistics.restTotal1);
+   
+                return $"{averageRestPlayer1}% ({_gameStatistics.restSuccess1}/{_gameStatistics.restTotal1})";
             }
         }
-
         public string PsntPlayer1 {
             get {
                 return "";
             }
         }
-
         public string SafetyPlayer1 {
             get {
                 return "";
             }
         }
-
         public string ShotTimePlayer1 {
             get {
                 return "";
             }
         }
-
         public string TableTimePlayer1 {
             get {
                 return "";
             }
         }
-
         public string EscapePlayer1 {
             get {
                 return "";
             }
         }
-
         //update statistic for player2
         public string PotsPlayer2 {
             get {
-                if(!Player1Turn) {
-                    calculateAverageFor = "potsPlayer2";
-                    CalculateAverage(potsSuccessPlayer2, totalTriesPlayer2);
-                    
-                }
-                return $"{averagePotsPlayer2}% ({potsSuccessPlayer2}/{totalTriesPlayer2})";
+                calculateAverageFor = "potsPlayer2";
+                CalculateAverage(_gameStatistics.potsSuccessPlayer2, _gameStatistics.totalTriesPlayer2);
+               
+                    return $"{averagePotsPlayer2}% ({_gameStatistics.potsSuccessPlayer2}/{_gameStatistics.totalTriesPlayer2})";
             }
         }
-
         public string LongPlayer2 {
             get {
-                if(!Player1Turn) {
-                    calculateAverageFor = "longPlayer2";
-                    CalculateAverage(longSuccessPlayer2, longTotalPlayer2);
-                }
-                                
-                return $"{averagePotsPlayer2}% ({longSuccessPlayer2}/{longTotalPlayer2})";
+                calculateAverageFor = "longPlayer2";
+                CalculateAverage(_gameStatistics.longSuccess2, _gameStatistics.longTotal2);
+               
+                return $"{averagePotsPlayer2}% ({_gameStatistics.longSuccess2}/{_gameStatistics.longTotal2})";
             }
         }
         public string RestPlayer2 {
             get {
-                if(!Player1Turn) {
-                    calculateAverageFor = "restPlayer2";
-                    CalculateAverage(restSuccessPlayer2, restTotalPlayer2);
-                }
-                
-                return $"{averageRestPlayer1}% ({restSuccessPlayer2}/{restTotalPlayer2})";
+                calculateAverageFor = "restPlayer2";
+                CalculateAverage(_gameStatistics.restSuccess2, _gameStatistics.restTotal2);
+               
+                return $"{averageRestPlayer1}% ({_gameStatistics.restSuccess2}/{_gameStatistics.restTotal2})";
             }
         }
         public void CalculateAverage(int success, int total)
         {
             if(calculateAverageFor.Equals("potsPlayer1")) {
-                averagePotsPlayer1 = Math.Floor(((double)success / total) * 100);
+                if(success == 0) {
+                    averagePotsPlayer1 = 0;
+                } else {
+                    averagePotsPlayer1 = Math.Floor(((double)success / total) * 100);
+                }                
             } else if(calculateAverageFor.Equals("longPlayer1")) {
-                averageLongPlayer1 = Math.Floor(((double)success / total) * 100);
+                if(success == 0) {
+                    averageLongPlayer1 = 0;
+                } else {
+                    averageLongPlayer1 = Math.Floor(((double)success / total) * 100);
+                }                
             } else if(calculateAverageFor.Equals("restPlayer1")) {
-                averageRestPlayer1 = Math.Floor(((double)success / total) * 100);
+                if (success == 0) {
+                    averageRestPlayer1 = 0;
+                } else {
+                    averageRestPlayer1 = Math.Floor(((double)success / total) * 100);
+                }
             } else if(calculateAverageFor.Equals("potsPlayer2")) {
-                averagePotsPlayer2 = Math.Floor(((double)success / total) * 100);
+                if (success == 0) {
+                    averagePotsPlayer2 = 0;
+                } else {
+                    averagePotsPlayer2 = Math.Floor(((double)success / total) * 100);
+                }
             } else if (calculateAverageFor.Equals("longPlayer2")) {
-                averageLongPlayer2 = Math.Floor(((double)success / total) * 100);
+                if (success == 0) {
+                    averageLongPlayer2 = 0;
+                } else {
+                    averageLongPlayer2 = Math.Floor(((double)success / total) * 100);
+                }               
             } else if (calculateAverageFor.Equals("restPlayer2")) {
-                averageRestPlayer2 = Math.Floor(((double)success / total) * 100);
+                if (success == 0) {
+                    averageRestPlayer2 = 0;
+                } else {
+                    averageRestPlayer2 = Math.Floor(((double)success / total) * 100);
+                }               
             }        
         }
+        public void GoBackToGame(object sender)
+        {
+            GameStatistics stats = new GameStatistics();
+            stats.potsSuccessPlayer1 = _gameStatistics.potsSuccessPlayer1;
+            stats.totalTriesPlayer1 = _gameStatistics.totalTriesPlayer1;
+            stats.potsSuccessPlayer2 = _gameStatistics.potsSuccessPlayer2;
+            stats.totalTriesPlayer2 = _gameStatistics.totalTriesPlayer2;
+            stats.longSuccess1 = _gameStatistics.longSuccess1;
+            stats.longTotal1 = _gameStatistics.longTotal1;
+            stats.longSuccess2 = _gameStatistics.longSuccess2;
+            stats.longTotal2 = _gameStatistics.longTotal2;
+            stats.restSuccess1 = _gameStatistics.restSuccess1;
+            stats.restTotal1 = _gameStatistics.restTotal1;
+            stats.restSuccess2 = _gameStatistics.restSuccess2;
+            stats.restTotal2 = _gameStatistics.restTotal2;
+            stats.player1total = _gameStatistics.player1total;
+            stats.player1break = _gameStatistics.player1break;
+            stats.player2total = _gameStatistics.player2total;
+            stats.player2break = _gameStatistics.player2break;
 
+            var playGamePage = new PlayGamePage(stats);
+            NavigationPage.SetHasNavigationBar(playGamePage, false);
+
+            _navigation.PushAsync(playGamePage);
+        }
     }
 }

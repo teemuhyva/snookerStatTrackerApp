@@ -15,8 +15,8 @@ namespace SnookerApp.ViewModels
         public PlayerPick() {
             GetNewPlayerCommand = new Command(GetNewPlayer);
         }
-        string player1 = string.Empty;
-        string player2 = string.Empty;
+        string player1;
+        string player2;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

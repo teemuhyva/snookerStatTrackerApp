@@ -12,9 +12,9 @@
                          VerticalOptions="CenterAndExpand"
                          Padding="0,20,0,0">
                 <Label Text="HandyCap" Margin="40"/>
-                <Label Text="Player 1" HorizontalOptions="Center"/>
+                <Label Text="{Binding Player1}" HorizontalOptions="Center"/>
                 <Picker Title="0" ItemsSource="{Binding HandyCap}" ItemDisplayBinding="{Binding HandyCap}"/>
-                <Label Text="Player 2" HorizontalOptions="Center"/>
+                <Label Text="{Binding Player2}" HorizontalOptions="Center"/>
             </StackLayout>
             <Button Text="Next" HorizontalOptions="Center" Clicked="PlayGame"/>
             <Button Text="Back" HorizontalOptions="Center" Clicked="BackToSetGame2"/>

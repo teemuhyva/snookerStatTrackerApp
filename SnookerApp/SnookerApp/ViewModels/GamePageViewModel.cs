@@ -18,9 +18,10 @@ namespace SnookerApp.ViewModels
         private string gameTextArea, gameScoreArea;
         private string playerStatsDisplayText;
 
+        int potsSuccessPlayer1, totalTriesPlayer1, potsSuccessPlayer2, totalTriesPlayer2, longSuccess1, longTotal1,
+            longSuccess2, longTotal2, restSuccess1, restTotal1, restSuccess2, restTotal2;
+
         private double average;
-        private int potsSuccessPlayer1, totalTriesPlayer1, longSuccess1, longTotal1, restSuccess1, restTotal1;
-        private int potsSuccessPlayer2, totalTriesPlayer2, longSuccess2, longTotal2, restSuccess2, restTotal2;
         private Boolean isPlayer1Turn;
         private Boolean isRest;
         private Boolean isLong;
@@ -34,25 +35,44 @@ namespace SnookerApp.ViewModels
 
         private INavigation _navigation;
 
+        GameStatistics _gameStatistics;
+
         //if red is false player can pot colored ball
         Boolean red = true;
 
         Boolean player1Turn = true;
         
-        public GamePageViewModel(INavigation navigation)
+        public GamePageViewModel(GameStatistics gameStatistics, INavigation navigation)
         {
             _navigation = navigation;
-            AddOnePoint = new Command(OnePoint);
-            AddTwoPoint = new Command(TwoPoint);
-            AddThreePoint = new Command(ThreePoint);
-            AddFourPoint = new Command(FourPoint);
-            AddFivePoint = new Command(FivePoint);
-            AddSixPoint = new Command(SixPoint);
-            AddSevenPoint = new Command(SevenPoint);
+            AddOnePoint = new Command(() => AddPoints(1));
+            AddTwoPoint = new Command(() => AddPoints(2));
+            AddThreePoint = new Command(() => AddPoints(3));
+            AddFourPoint = new Command(() => AddPoints(4));
+            AddFivePoint = new Command(() => AddPoints(5));
+            AddSixPoint = new Command(() => AddPoints(6));
+            AddSevenPoint = new Command(() => AddPoints(7));
             MissedPot = new Command(PotMissed);
             GoToStats = new Command<object>(CheckStats);
             Rest = new Command(RestEnabled);
             Long = new Command(LongEnabled);
+
+            potsSuccessPlayer1 = gameStatistics.potsSuccessPlayer1;
+            totalTriesPlayer1 = gameStatistics.totalTriesPlayer1;
+            potsSuccessPlayer2 = gameStatistics.potsSuccessPlayer2;
+            totalTriesPlayer2 = gameStatistics.totalTriesPlayer2;
+            longSuccess1 = gameStatistics.longSuccess1;
+            longTotal1 = gameStatistics.longTotal1;
+            longSuccess2 = gameStatistics.longSuccess2;
+            longTotal2 = gameStatistics.longTotal2;
+            restSuccess1 = gameStatistics.restSuccess1;
+            restTotal1 = gameStatistics.restTotal1;
+            restSuccess2 = gameStatistics.restSuccess2;
+            restTotal2 = gameStatistics.restTotal2;
+            player1Score = gameStatistics.player1total;
+            player1Break = gameStatistics.player1break;
+            player2Score = gameStatistics.player2total;
+            player2Score = gameStatistics.player2break;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -102,37 +122,37 @@ namespace SnookerApp.ViewModels
         }
         public int PotsSuccessPlayer1 {
             get {
-                return potsSuccessPlayer1;
+                return _gameStatistics.potsSuccessPlayer1;
             } 
             set {
-                potsSuccessPlayer1 += 1;
+                _gameStatistics.potsSuccessPlayer1 += 1;
                 OnPropertyChanged();
             }
         }
         public int TotalTriesPlayer1 {
             get {
-                return totalTriesPlayer1;
+                return _gameStatistics.totalTriesPlayer1;
             }
             set {
-                totalTriesPlayer1 += 1;
+                _gameStatistics.totalTriesPlayer1 += 1;
                 OnPropertyChanged();
             }
         }
         public int PotsSuccessPlayer2 {
             get {
-                return potsSuccessPlayer2;
+                return _gameStatistics.potsSuccessPlayer2;
             }
             set {
-                potsSuccessPlayer2 += 1;
+                _gameStatistics.potsSuccessPlayer2 += 1;
                 OnPropertyChanged();
             }
         }
         public int TotalTriesPlayer2 {
             get {
-                return totalTriesPlayer2;
+                return _gameStatistics.totalTriesPlayer2;
             }
             set {
-                totalTriesPlayer2 += 1;
+                _gameStatistics.totalTriesPlayer2 += 1;
                 OnPropertyChanged();
             }
         }
@@ -145,8 +165,6 @@ namespace SnookerApp.ViewModels
             }
         }
 
-       
-
         public Command AddOnePoint { get; }
         public Command AddTwoPoint { get; }
         public Command AddThreePoint { get; }
@@ -158,803 +176,146 @@ namespace SnookerApp.ViewModels
         public Command Long { get; }
         public Command Rest { get; }
 
-        //these following 7 methods for points needs to be refactored. Does same things over and over again
-        //logic is ok for now.
-        void OnePoint()
-        {
+        void AddPoints(int amount) {
             if (currentAmountRedPotted < 15 || totalPointsInGame < 147)
             {
-                if (player1Turn)
-                {
-                    currentPointsGained += 1;
-                    currentAmountRedPotted += 1;
-                    potsSuccessPlayer1++;
-                    totalTriesPlayer1++;
-                    GameTextArea = "Player 1 scored 1 point\n";
-                    Player1Score = 1;
-                    Player1Break = 1;                    
-                    red = false;
+                if (player1Turn) {
+                    if(amount == 1)
+                    {
+                        Player1Score = amount;
+                        Player1Break = amount;
+                        AddPointsGained(amount);
+                        CheckLongRest(isLong, isRest, player1Turn);
+                        potsSuccessPlayer1 += 1;
+                        totalTriesPlayer1 += 1;
+                        currentAmountRedPotted += 1;
+                        red = false;
+                    }
+                    if(!red && amount > 1)
+                    {
+                        Player1Score = amount;
+                        Player1Break = amount;
+                        AddPointsGained(amount);
+                        CheckLongRest(isLong, isRest, player1Turn);
+                        potsSuccessPlayer1 += 1;
+                        totalTriesPlayer1 += 1;
+                        red = true;
+                    }
                     
-                    if(isLong)
+                    
+
+                } else {
+                    if(amount == 1)
                     {
-                        longSuccess1++;
-                        longTotal1++;
-                        isLong = false;
+                        Player2Score = amount;
+                        Player2Break = amount;
+                        AddPointsGained(amount);
+                        CheckLongRest(isLong, isRest, player1Turn);
+                        potsSuccessPlayer2 += 1;
+                        totalTriesPlayer2 += 1;
+                        currentAmountRedPotted += 1;
+                        red = false;
+                    }
+                    if (!red && amount > 1)
+                    {
+                        Player2Score = amount;
+                        Player2Break = amount;
+                        AddPointsGained(amount);
+                        CheckLongRest(isLong, isRest, player1Turn);
+                        potsSuccessPlayer1 += 1;
+                        totalTriesPlayer1 += 1;
+                        red = true;
                     }
 
-                    if(isRest)
-                    {
-                        restSuccess1++;
-                        restTotal1++;
-                        isRest = false;
-                    }
                 }
-                else
-                {
-                    GameTextArea = "Player 2 scored 1 point\n";
-                    currentPointsGained += 1;
-                    currentAmountRedPotted += 1;
-                    potsSuccessPlayer2++;
-                    totalTriesPlayer2++;
-                    Player2Score = 1;
-                    Player2Break = 1;                    
-                    red = false;
-
-                    if (isLong)
-                    {
-                        longSuccess2++;
-                        longTotal2++;
-                        isLong = false;
-                    }
-
-                    if (isRest)
-                    {
-                        restSuccess2++;
-                        restTotal2++;
-                        isRest = false;
-                    }
-                }
+            } else if(currentAmountRedPotted == 15 && currentPointsGained == 140) {
+                AddLastPoints();
             }
-            else
-            {
-                if (currentPointsGained == totalPointsInGame)
-                {
-                    GameTextArea = "No more points possible\n";
-                }
-                if (currentAmountRedPotted == 15)
-                {
-                    GameTextArea = "No more red balls on table. Next possible Yellow\n";
-                }
-            }                       
+            
         }
-        void TwoPoint()
-        {
-            if (currentAmountRedPotted < 15) {
-                //just quick fix if player can pot colored ball.
-                //needs refactoring and also if player will pot color instead of red it will be foul
-                //TODO: create foul page
-                //this is for all colored
-                if(!red)
-                {
-                    if (player1Turn)
-                    {
-                        potsSuccessPlayer1++;
-                        totalTriesPlayer1++;
-                        currentPointsGained += 2;
-                        Player1Score = 2;
-                        Player1Break = 2;                        
-                        GameTextArea = "Player 1 scored 2 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess1++;
-                            longTotal1++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess1++;
-                            restTotal1++;
-                            isRest = false;
-                        }
-                    }
-                    else
-                    {
-                        potsSuccessPlayer2++;
-                        totalTriesPlayer2++;
-                        currentPointsGained += 2;
-                        Player2Score = 2;
-                        Player2Break = 2;                        
-                        GameTextArea = "Player 2 scored 2 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess2++;
-                            longTotal2++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess2++;
-                            restTotal2++;
-                            isRest = false;
-                        }
-                    }
-                }
-               
+        void AddPointsGained(int amount) { 
+            if(player1Turn) {
+            currentPointsGained += amount;
             } else {
-                if(currentAmountRedPotted == 15) {
-                    if(!yellow)
-                    {
-                        if(player1Turn)
-                        {
-                            Player1Score = 2;
-                            Player1Break = 2;
-                            currentPointsGained += 2;
-                            yellow = true;
-
-                            if (isLong)
-                            {
-                                longSuccess1++;
-                                longTotal1++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess1++;
-                                restTotal1++;
-                                isRest = false;
-                            }
-                        } else
-                        {
-                            Player2Score = 2;
-                            Player2Break = 2;
-                            currentPointsGained += 2;
-                            yellow = true;
-
-                            if (isLong)
-                            {
-                                longSuccess2++;
-                                longTotal2++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess2++;
-                                restTotal2++;
-                                isRest = false;
-                            }
-                        }
-                       
-                    }
-                }
-
-                if (currentPointsGained == totalPointsInGame)
-                {
-                    GameTextArea = "Total points gained";
-                }
+            currentPointsGained += amount;
             }
-           
+            
         }
-        void ThreePoint()
+        void CheckLongRest(Boolean isLong, Boolean isRest, Boolean player1Turn)
         {
-            if (currentAmountRedPotted < 15)
+
+            if (player1Turn)
             {
-                if(!red)
+                if (isLong)
                 {
-                    if (player1Turn)
-                    {
-                        potsSuccessPlayer1++;
-                        totalTriesPlayer1++;
-                        currentPointsGained += 3;
-                        Player1Score = 3;
-                        Player1Break = 3;                        
-                        GameTextArea = "Player 1 scored 3 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess1++;
-                            longTotal1++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess1++;
-                            restTotal1++;
-                            isRest = false;
-                        }
-                    }
-                    else
-                    {
-                        potsSuccessPlayer2++;
-                        totalTriesPlayer2++;
-                        currentPointsGained += 3;
-                        Player2Score = 3;
-                        Player2Break = 3;                        
-                        GameTextArea = "Player 2 scored 3 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess2++;
-                            longTotal2++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess2++;
-                            restTotal2++;
-                            isRest = false;
-                        }
-                    }
+                    longSuccess1 += 1;
+                    longTotal1 += 1;
+                    isLong = false;
                 }
-                
+
+                if (isRest)
+                {
+                    restSuccess1 += 1;
+                    restTotal1 += 1;
+                    isLong = false;
+                }
             }
             else
             {
-                if (currentAmountRedPotted == 15)
+
+                if (isLong)
                 {
-                    if (!green)
-                    {
-                        if(player1Turn)
-                        {
-                            Player1Score = 3;
-                            Player1Break = 3;
-                            currentPointsGained += 3;
-                            green = true;
-
-                            if (isLong)
-                            {
-                                longSuccess1++;
-                                longTotal1++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess1++;
-                                restTotal1++;
-                                isRest = false;
-                            }
-                        } else
-                        {
-                            Player2Score = 3;
-                            Player2Break = 3;
-                            currentPointsGained += 3;
-                            green = true;
-
-                            if (isLong)
-                            {
-                                longSuccess2++;
-                                longTotal2++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess2++;
-                                restTotal2++;
-                                isRest = false;
-                            }
-                        }
-                      
-                    }
+                    longSuccess2 += 1;
+                    longTotal2 += 1;
+                    isLong = false;
                 }
 
-                if (currentPointsGained == totalPointsInGame)
+                if (isRest)
                 {
-                    GameTextArea = "Total points gained";
+                    restSuccess2 += 1;
+                    restTotal2 += 1;
+                    isLong = false;
                 }
             }
-
-        }
-        void FourPoint()
-        {
-            if (currentAmountRedPotted < 15)
-            {
-                if(!red)
-                {
-                    if (player1Turn)
-                    {
-                        potsSuccessPlayer1++;
-                        totalTriesPlayer1++;
-                        currentPointsGained += 4;
-                        Player1Score = 4;
-                        Player1Break = 4;                        
-                        GameTextArea = "Player 1 scored 4 points\n";
-                        
-                        red = true;
-                        if (isLong)
-                        {
-                            longSuccess1++;
-                            longTotal1++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess1++;
-                            restTotal1++;
-                            isRest = false;
-                        }
-                    }
-                    else
-                    {
-                        potsSuccessPlayer2++;
-                        totalTriesPlayer2++;
-                        currentPointsGained += 4;
-                        Player2Score = 4;
-                        Player2Break = 4;                        
-                        GameTextArea = "Player 2 scored 4 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess2++;
-                            longTotal2++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess2++;
-                            restTotal2++;
-                            isRest = false;
-                        }
-                    }
-                }
-               
-            }
-            else
-            {
-                if (currentAmountRedPotted == 15)
-                {
-                    if (!blue)
-                    {
-                        if(player1Turn)
-                        {
-                            Player1Score = 4;
-                            Player1Break = 4;
-                            currentPointsGained += 4;
-                            blue = true;
-
-                            if (isLong)
-                            {
-                                longSuccess1++;
-                                longTotal1++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess1++;
-                                restTotal1++;
-                                isRest = false;
-                            }
-                        } else
-                        {
-                            Player2Score = 4;
-                            Player2Break = 4;
-                            currentPointsGained += 4;
-                            blue = true;
-
-                            if (isLong)
-                            {
-                                longSuccess2++;
-                                longTotal2++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess2++;
-                                restTotal2++;
-                                isRest = false;
-                            }
-                        }
-                        
-                    }
-                }
-
-                if (currentPointsGained == totalPointsInGame)
-                {
-                    GameTextArea = "Total points gained";
-                }
-            }
-
-        }
-        void FivePoint()
-        {
-            if (currentAmountRedPotted < 15)
-            {
-                if(!red)
-                {
-                    if (player1Turn)
-                    {
-                        potsSuccessPlayer1++;
-                        totalTriesPlayer1++;
-                        currentPointsGained += 5;
-                        Player1Score = 5;
-                        Player1Break = 5;                        
-                        GameTextArea = "Player 1 scored 5 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess1++;
-                            longTotal1++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess1++;
-                            restTotal1++;
-                            isRest = false;
-                        }
-                    }
-                    else
-                    {
-                        Player2Score = 5;
-                        Player2Break = 5;
-                        currentPointsGained += 5;
-                        GameTextArea = "Player 2 scored 5 points\n";
-                        potsSuccessPlayer2++;
-                        totalTriesPlayer2++;
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess2++;
-                            longTotal2++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess2++;
-                            restTotal2++;
-                            isRest = false;
-                        }
-                    }
-                }
-               
-            }
-            else
-            {
-                if (currentAmountRedPotted == 15)
-                {
-                    if (!brown)
-                    {
-                        if(player1Turn)
-                        {
-                            Player1Score = 5;
-                            Player1Break = 5;
-                            currentPointsGained += 5;
-                            brown = true;
-
-                            if (isLong)
-                            {
-                                longSuccess1++;
-                                longTotal1++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess1++;
-                                restTotal1++;
-                                isRest = false;
-                            }
-                        } else
-                        {
-                            Player2Score = 5;
-                            Player2Break = 5;
-                            currentPointsGained += 5;
-                            brown = true;
-
-                            if (isLong)
-                            {
-                                longSuccess2++;
-                                longTotal2++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess2++;
-                                restTotal2++;
-                                isRest = false;
-                            }
-                        }
-                        
-                    }
-                }
-
-                if (currentPointsGained == totalPointsInGame)
-                {
-                    GameTextArea = "Total points gained";
-                }
-            }
-
-        }
-        void SixPoint()
-        {
-            if (currentAmountRedPotted < 15)
-            {
-                if(!red)
-                {
-                    if (player1Turn)
-                    {
-                        potsSuccessPlayer1++;
-                        totalTriesPlayer1++;
-                        currentPointsGained += 6;
-                        Player1Score = 6;
-                        Player1Break = 6;                        
-                        GameTextArea = "Player 1 scored 6 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess1++;
-                            longTotal1++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess1++;
-                            restTotal1++;
-                            isRest = false;
-                        }
-                    }
-                    else
-                    {
-                        potsSuccessPlayer2++;
-                        totalTriesPlayer2++;
-                        currentPointsGained += 6;
-                        Player2Score = 6;
-                        Player2Break = 6;                        
-                        GameTextArea = "Player 2 scored 6 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess2++;
-                            longTotal2++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess2++;
-                            restTotal2++;
-                            isRest = false;
-                        }
-                    }
-                }
-                
-            }
-            else
-            {
-                if (currentAmountRedPotted == 15)
-                {
-                    if (!pink)
-                    {
-                        if(player1Turn)
-                        {
-                            Player1Score = 6;
-                            Player1Break = 6;
-                            currentPointsGained += 6;
-                            pink = true;
-
-                            if (isLong)
-                            {
-                                longSuccess1++;
-                                longTotal1++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess1++;
-                                restTotal1++;
-                                isRest = false;
-                            }
-                        } else
-                        {
-                            Player2Score = 6;
-                            Player2Break = 6;
-                            currentPointsGained += 6;
-                            pink = true;
-
-                            if (isLong)
-                            {
-                                longSuccess2++;
-                                longTotal2++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess2++;
-                                restTotal2++;
-                                isRest = false;
-                            }
-                        }
-                        
-                    }
-                }
-
-                if (currentPointsGained == totalPointsInGame)
-                {
-                    GameTextArea = "Total points gained";
-                }
-            }
-
-        }
-        void SevenPoint()
-        {
-            if (currentAmountRedPotted <= 15 && currentPointsGained < 140)
-            {
-                if(!red)
-                {
-                    if (player1Turn)
-                    {
-                        potsSuccessPlayer1++;
-                        totalTriesPlayer1++;
-                        currentPointsGained += 7;
-                        Player1Score = 7;
-                        Player1Break = 7;                       
-                        GameTextArea = "Player 1 scored 7 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess1++;
-                            longTotal1++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess1++;
-                            restTotal1++;
-                            isRest = false;
-                        }
-                    }
-                    else
-                    {
-                        potsSuccessPlayer2++;
-                        totalTriesPlayer2++;
-                        currentPointsGained += 7;
-                        Player2Score = 7;
-                        Player2Break = 7;                        
-                        GameTextArea = "Player 2 scored 7 points\n";                        
-                        red = true;
-
-                        if (isLong)
-                        {
-                            longSuccess2++;
-                            longTotal2++;
-                            isLong = false;
-                        }
-
-                        if (isRest)
-                        {
-                            restSuccess2++;
-                            restTotal2++;
-                            isRest = false;
-                        }
-                    }
-                }
-               
-            }
-            else
-            {
-                if (currentAmountRedPotted == 15 && currentPointsGained == 140)
-                {
-                    if (!black)
-                    {
-                        if(player1Turn)
-                        {
-                            Player1Score = 7;
-                            Player1Break = 7;
-                            currentPointsGained += 7;
-                            black = true;
-
-                            if (isLong)
-                            {
-                                longSuccess1++;
-                                longTotal1++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess1++;
-                                restTotal1++;
-                                isRest = false;
-                            }
-                        } else
-                        {
-                            Player2Score = 7;
-                            Player2Break = 7;
-                            currentPointsGained += 7;
-                            black = true;
-
-                            if (isLong)
-                            {
-                                longSuccess2++;
-                                longTotal2++;
-                                isLong = false;
-                            }
-
-                            if (isRest)
-                            {
-                                restSuccess2++;
-                                restTotal2++;
-                                isRest = false;
-                            }
-                        }                       
-                    }
-                }
-
-                if (currentPointsGained == totalPointsInGame)
-                {
-                    GameTextArea = "Total points gained";
-                }
-            }
-
         }
         void PotMissed()
         {
-            if(player1Turn)
+            if (player1Turn)
             {
                 player1Turn = false;
                 player1Break = 0;
                 Player1Break = 0;
-                totalTriesPlayer1++;
+                totalTriesPlayer1 += 1;
                 if (isLong)
                 {
-                    longTotal1++;
+                    longTotal1 += 1;
                     isLong = false;
                 }
 
                 if (isRest)
                 {
-                    restTotal1++;
+                    restTotal1 += 1;
                     isRest = false;
                 }
-                GameTextArea = "Player 1 missed\n";
-            } else
+            }
+            else
             {
                 player1Turn = true;
                 player2Break = 0;
                 Player2Break = 0;
-                totalTriesPlayer2++;
+                totalTriesPlayer2 += 1;
                 if (isLong)
                 {
-                    longTotal2++;
+                    longTotal2 += 1;
                     isLong = false;
                 }
 
                 if (isRest)
                 {
-                    restTotal2++;
+                    restTotal2 += 1;
                     isRest = false;
                 }
-                GameTextArea = "Player 2 missed\n";
-            }            
+            }
         }
         void RestEnabled()
         {
@@ -966,13 +327,73 @@ namespace SnookerApp.ViewModels
         }
         private void CheckStats(object sender)
         {
-            _navigation.PushAsync(new StatisticPage(potsSuccessPlayer1, totalTriesPlayer1,
-                potsSuccessPlayer2, totalTriesPlayer2,
-                longSuccess1, longTotal1,
-                longSuccess2, longTotal2,
-                restSuccess1, restTotal1,
-                restSuccess2, restTotal2,
-                player1Turn));
+            GameStatistics stats = new GameStatistics();
+            stats.potsSuccessPlayer1 = potsSuccessPlayer1;
+            stats.totalTriesPlayer1 = totalTriesPlayer1;
+            stats.potsSuccessPlayer2 = potsSuccessPlayer2;
+            stats.totalTriesPlayer2 = totalTriesPlayer2;
+            stats.longSuccess1 = longSuccess1;
+            stats.longTotal1 = longTotal1;
+            stats.longSuccess2 = longSuccess2;
+            stats.longTotal2 = longTotal2;
+            stats.restSuccess1 = restSuccess1;
+            stats.restTotal1 = restTotal1;
+            stats.restSuccess2 = restSuccess2;
+            stats.restTotal2 = restTotal2;
+            stats.player1total = player1Score;
+            stats.player1break = player1Break;
+            stats.player2total = player2Score;
+            stats.player2break = player2Score;
+
+            _navigation.PushAsync(new StatisticPage(stats));
+        }
+        void AddLastPoints()
+        {
+            if (!black)
+            {
+                if (player1Turn)
+                {
+                    Player1Score = 7;
+                    Player1Break = 7;
+                    currentPointsGained += 7;
+                    black = true;
+
+                    if (isLong)
+                    {
+                        longSuccess1 += 1;
+                        longTotal1 += 1;
+                        isLong = false;
+                    }
+
+                    if (isRest)
+                    {
+                        restSuccess1 += 1;
+                        restTotal1 += 1;
+                        isRest = false;
+                    }
+                }
+                else
+                {
+                    Player2Score = 7;
+                    Player2Break = 7;
+                    currentPointsGained += 7;
+                    black = true;
+
+                    if (isLong)
+                    {
+                        longSuccess2 += 1;
+                        longTotal2 += 1;
+                        isLong = false;
+                    }
+
+                    if (isRest)
+                    {
+                        restSuccess2 += 1;
+                        restTotal2 += 1;
+                        isRest = false;
+                    }
+                }
+            }
         }
     }
 }

@@ -6,41 +6,26 @@ using System.Text;
 
 namespace SnookerApp.Model
 {
-    public class GameStatistics : INotifyPropertyChanged
+    public class GameStatistics
     {
-
-        private int potsSuccessPlayer1;
-        private int totalTriesPlayer1;
-
-        public GameStatistics(int potsSuccess, int totalTries)
-        {
-            potsSuccessPlayer1 = potsSuccess;
-            totalTriesPlayer1 = totalTries;
+        public GameStatistics() { 
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        void OnPropertyChanged([CallerMemberName] string name = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        public int PotsSuccessPlayer1 {
-            get {
-                return potsSuccessPlayer1; 
-            }
-            set {
-                potsSuccessPlayer1 = value;
-                OnPropertyChanged();
-            }
-        }
-        public int TotalTriesPlayer1 {
-            get {
-                return totalTriesPlayer1;
-            }
-            set {
-                potsSuccessPlayer1 = value;
-                OnPropertyChanged();
-            }
-        }
+        public int potsSuccessPlayer1 { get; set; }
+        public int totalTriesPlayer1 { get; set; }
+        public int potsSuccessPlayer2 { get; set; }
+        public int totalTriesPlayer2 { get; set; }
+        public int longSuccess1 { get; set; }
+        public int longTotal1 { get; set; }
+        public int longSuccess2 { get; set; }
+        public int longTotal2 { get; set; }
+        public int restSuccess1 { get; set; }
+        public int restTotal1 { get; set; }
+        public int restSuccess2 { get; set; }
+        public int restTotal2 { get; set; }
+        public int player1total { get; set; }
+        public int player2total { get; set; }
+        public int player1break { get; set; }
+        public int player2break { get; set; }
     }
 }

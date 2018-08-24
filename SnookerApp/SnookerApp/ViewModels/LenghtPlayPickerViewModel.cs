@@ -9,14 +9,15 @@ namespace SnookerApp.ViewModels
 {
     public class LenghtPlayPickerViewModel : INotifyPropertyChanged {
 
-        public List<GameSettings> HandyCap { get; set; }
 
-        public List<GameSettings> BestOff { get; set; }
+        Players _players;
+        
 
-        public LenghtPlayPickerViewModel()
+        public LenghtPlayPickerViewModel(Players players)
         {
             HandyCap = AddHandyCapSelection();
             BestOff = AddHBestOffSelection();
+            _players = players;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -25,7 +26,19 @@ namespace SnookerApp.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+        public List<GameSettings> HandyCap { get; set; }
+        public List<GameSettings> BestOff { get; set; }
+        public string Player1 {
+            get {
+                return _players.Player1;
+            }
+        }
 
+        public string Player2 {
+            get {
+                return _players.Player2;
+            }
+        }
         public List<GameSettings> AddHandyCapSelection()
         {
                 var handyCap = new List<GameSettings>()

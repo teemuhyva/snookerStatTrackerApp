@@ -7,7 +7,9 @@ namespace SnookerApp
 {
     public class Players {
 
-        public string PlayerName { get; set; }       
+        public string PlayerName { get; set; }
+        public string Player1 { get; set; }
+        public string Player2 { get; set; }
 
         public static ObservableCollection<Players> PlayerList = new ObservableCollection<Players>
         {

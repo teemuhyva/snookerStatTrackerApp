@@ -14,10 +14,10 @@ namespace SnookerApp
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class PlayGamePage : ContentPage
 	{
-		public PlayGamePage ()
+		public PlayGamePage (GameStatistics gameStatistics)
 		{
 			InitializeComponent ();
-            BindingContext = new GamePageViewModel(Navigation);
+            BindingContext = new GamePageViewModel(gameStatistics, Navigation);
         }
         
     }
