@@ -35,9 +35,10 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </StackLayout>
-            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                <Button Text="New Player" Command="{Binding GetNewPlayerCommand}"/>
-                <Button Text="Next" Clicked="SetHandiCapPage"/>
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">                
+                <Entry x:Name="nickname" Placeholder="Nickname" />
+                <Button Text="Find Player" Clicked="FindPlayerByNick"/> 
+                <Button Text="Next" Clicked="SetHandiCapPage"/>                
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

@@ -22,6 +22,7 @@ namespace SnookerApp
             BindingContext = new PlayerPick();
 
             playerView.ItemsSource = Players.PlayerList;
+            
         }
 
         async void SetHandiCapPage(object sender, EventArgs e)
@@ -51,6 +52,11 @@ namespace SnookerApp
 
             }
         }
-        
+
+        void FindPlayerByNick(object sender, EventArgs e) {
+            var playerName = nickname.Text;
+            new PlayerPick(playerName);
+        }
+
     }
 }

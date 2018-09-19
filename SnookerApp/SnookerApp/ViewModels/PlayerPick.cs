@@ -9,20 +9,37 @@ using Xamarin.Forms;
 
 namespace SnookerApp.ViewModels
 {
-    public class PlayerPick : INotifyPropertyChanged
-    {
+    public class PlayerPick : INotifyPropertyChanged {
+
+        private string findPlayerWithNick;
+        private Players players;
+        private string _nickName;
 
         public PlayerPick() {
-            GetNewPlayerCommand = new Command(GetNewPlayer);
         }
+
+        public PlayerPick(string nickname) {
+            _nickName = nickname;
+            FindPlayer = new Command(async () =>  await FindPlayerNick());
+        }
+
         string player1;
         string player2;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        void OnPropertyChanged([CallerMemberName] string name = "")
-        {
+        void OnPropertyChanged([CallerMemberName] string name = "") {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public string Players {
+            get {
+                return findPlayerWithNick;
+            }
+            set {
+                findPlayerWithNick = value;
+                OnPropertyChanged();
+            }
         }
 
         public string Player1 {
@@ -30,8 +47,7 @@ namespace SnookerApp.ViewModels
                 return player1;
             }
             set {
-                if(player1 != value)
-                {
+                if (player1 != value) {
                     player1 = value;
                 }
                 OnPropertyChanged();
@@ -48,13 +64,10 @@ namespace SnookerApp.ViewModels
             }
         }
 
-        public Command GetNewPlayerCommand { get; }
+        public Command FindPlayer { get; }
 
-
-        void GetNewPlayer()
-        {
-            Player1 = "Tuomas";
+        async Task FindPlayerNick() {
+            await players.FindPlayerByNick(_nickName);
         }
-
     }
 }
